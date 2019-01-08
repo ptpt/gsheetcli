@@ -1,0 +1,23 @@
+{
+  "name": "gsheetcli",
+  "version": "1.0.0",
+  "description": "Simple Google Sheets command line tools",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tao Peng",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^10.12.18",
+    "typescript": "^3.2.2"
+  },
+  "dependencies": {
+    "csv-parse": "^4.3.0",
+    "csv-stringify": "^5.1.2",
+    "googleapis": "^36.0.0"
+  },
+  "bin": {
+    "gsheetcli": "./index.js"
+  }
+}
