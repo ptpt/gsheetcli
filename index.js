@@ -20,10 +20,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const url = __importStar(require("url"));
-const googleapis_1 = require("googleapis");
 const csv_parse_1 = __importDefault(require("csv-parse"));
 const csv_stringify_1 = __importDefault(require("csv-stringify"));
-const CLI_NAME = 'gsheetcli';
+const googleapis_1 = require("googleapis");
+const CLI_NAME = "gsheetcli";
 function parseSpreadSheetURL(urlStr) {
     // Url {
     //     protocol: 'https:',
@@ -45,7 +45,7 @@ function parseSpreadSheetURL(urlStr) {
     if (!component.path) {
         throw new Error(`${CLI_NAME}: could not find spreadsheet ID from the path of URL ${urlStr}`);
     }
-    const spreadSheetId = component.path.split('/')[3];
+    const spreadSheetId = component.path.split("/")[3];
     if (!spreadSheetId) {
         throw new Error(`${CLI_NAME}: could not find spreadsheet ID from the path of URL ${urlStr}`);
     }
@@ -67,39 +67,39 @@ function getService() {
         // environment variables.
         const auth = yield googleapis_1.google.auth.getClient({
             // Scopes can be specified either as an array or as a single, space-delimited string.
-            scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+            scopes: ["https://www.googleapis.com/auth/spreadsheets"],
         });
-        const service = googleapis_1.google.sheets({ version: 'v4', auth });
+        const service = googleapis_1.google.sheets({ version: "v4", auth });
         return service;
     });
 }
 function get() {
     return __awaiter(this, void 0, void 0, function* () {
-        process.stdout.on('close', () => {
+        process.stdout.on("close", () => {
             process.exit(0);
         });
-        process.stdout.on('end', () => {
+        process.stdout.on("end", () => {
             process.exit(0);
         });
         const service = yield getService();
         const range = parseSpreadSheetURL(process.argv[3]);
         const spreadsheet = yield service.spreadsheets.get({
-            'spreadsheetId': range.spreadSheetId,
-            'includeGridData': false,
+            spreadsheetId: range.spreadSheetId,
+            includeGridData: false,
         });
         if (!spreadsheet.data.sheets) {
             return;
         }
         // getting sheet title for constructing range
-        const sheetProperty = spreadsheet.data.sheets.find(sheet => sheet.properties ? sheet.properties.sheetId === range.sheetId : false);
+        const sheetProperty = spreadsheet.data.sheets.find((sheet) => sheet.properties ? sheet.properties.sheetId === range.sheetId : false);
         if (!sheetProperty || !sheetProperty.properties) {
             return;
         }
         const finalRange = range.range ? `${sheetProperty.properties.title}!${range.range}` : sheetProperty.properties.title;
         const sheetData = yield service.spreadsheets.values.get({
-            'majorDimension': 'ROWS',
-            'spreadsheetId': range.spreadSheetId,
-            'range': finalRange,
+            majorDimension: "ROWS",
+            spreadsheetId: range.spreadSheetId,
+            range: finalRange,
         });
         csv_stringify_1.default(sheetData.data.values || [], (err, output) => {
             if (err) {
@@ -115,58 +115,58 @@ function get() {
 function update() {
     return __awaiter(this, void 0, void 0, function* () {
         const rows = [];
-        var parser = csv_parse_1.default({ 'relax_column_count': true });
-        parser.on('readable', () => {
+        let parser = csv_parse_1.default({ relax_column_count: true });
+        parser.on("readable", () => {
             let row;
             while (row = parser.read()) {
                 rows.push(row);
             }
         });
-        parser.on('end', () => __awaiter(this, void 0, void 0, function* () {
+        parser.on("end", () => __awaiter(this, void 0, void 0, function* () {
             const service = yield getService();
             const range = parseSpreadSheetURL(process.argv[3]);
             const spreadsheet = yield service.spreadsheets.get({
-                'spreadsheetId': range.spreadSheetId,
-                'includeGridData': false,
+                spreadsheetId: range.spreadSheetId,
+                includeGridData: false,
             });
             if (!spreadsheet.data.sheets) {
                 return;
             }
             // getting sheet title for constructing range
-            const sheetProperty = spreadsheet.data.sheets.find(sheet => sheet.properties ? sheet.properties.sheetId === range.sheetId : false);
+            const sheetProperty = spreadsheet.data.sheets.find((sheet) => sheet.properties ? sheet.properties.sheetId === range.sheetId : false);
             if (!sheetProperty || !sheetProperty.properties) {
                 return;
             }
             const finalRange = range.range ? `${sheetProperty.properties.title}!${range.range}` : sheetProperty.properties.title;
             const resp = yield service.spreadsheets.values.update({
-                'range': finalRange,
-                'spreadsheetId': range.spreadSheetId,
-                'valueInputOption': 'RAW',
-                'requestBody': {
-                    'majorDimension': 'ROWS',
-                    'values': rows,
-                }
+                range: finalRange,
+                spreadsheetId: range.spreadSheetId,
+                valueInputOption: "RAW",
+                requestBody: {
+                    majorDimension: "ROWS",
+                    values: rows,
+                },
             });
             console.log(`${resp.data.updatedCells} cells updated.`);
         }));
-        parser.on('error', (err) => {
+        parser.on("error", (err) => {
             console.error(err.message);
         });
         // collecting
-        process.stdin.on('readable', () => {
+        process.stdin.on("readable", () => {
             let chunk;
             while (chunk = process.stdin.read()) {
                 parser.write(chunk);
             }
         });
-        process.stdin.on('end', () => {
+        process.stdin.on("end", () => {
             parser.end();
         });
     });
 }
 function append() {
     return __awaiter(this, void 0, void 0, function* () {
-        console.error('not implemented :)');
+        console.error("not implemented :)");
     });
 }
 function help() {
@@ -187,32 +187,32 @@ function error(subcommand) {
     });
 }
 const subcommand = process.argv[2];
-if (subcommand === 'get') {
-    get().catch(err => {
+if (subcommand === "get") {
+    get().catch((err) => {
         console.error(err.message);
         process.exit(1);
     });
 }
-else if (subcommand === 'update') {
-    update().catch(err => {
+else if (subcommand === "update") {
+    update().catch((err) => {
         console.error(err.message);
         process.exit(1);
     });
 }
-else if (subcommand === 'append') {
-    append().catch(err => {
+else if (subcommand === "append") {
+    append().catch((err) => {
         console.error(err.message);
         process.exit(1);
     });
 }
-else if (subcommand === 'help' || subcommand === undefined) {
-    help().catch(err => {
+else if (subcommand === "help" || subcommand === undefined) {
+    help().catch((err) => {
         console.error(err.message);
         process.exit(1);
     });
 }
 else {
-    error(subcommand).catch(err => {
+    error(subcommand).catch((err) => {
         console.error(err.message);
         process.exit(1);
     });

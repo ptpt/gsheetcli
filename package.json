@@ -9,8 +9,8 @@
   "author": "Tao Peng",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^10.12.18",
-    "typescript": "^3.2.2"
+    "@types/node": "^12.6.9",
+    "typescript": "^3.5.3"
   },
   "dependencies": {
     "csv-parse": "^4.3.0",
