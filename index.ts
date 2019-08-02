@@ -73,14 +73,16 @@ async function get() {
     if (!spreadsheet.data.sheets) {
         return;
     }
+    // getting sheet title for constructing range
     const sheetProperty = spreadsheet.data.sheets.find(sheet => sheet.properties ? sheet.properties.sheetId === range.sheetId : false);
     if (!sheetProperty || !sheetProperty.properties) {
         return;
     }
+    const finalRange = range.range ? `${sheetProperty.properties.title}!${range.range}` : sheetProperty.properties.title;
     const sheetData = await service.spreadsheets.values.get({
         'majorDimension': 'ROWS',
         'spreadsheetId': range.spreadSheetId,
-        'range': sheetProperty.properties.title,
+        'range': finalRange,
     });
     for (const row of sheetData.data.values || []) {
         stringifier.write(row);
@@ -109,14 +111,16 @@ async function update() {
         if (!spreadsheet.data.sheets) {
             return;
         }
+        // getting sheet title for constructing range
         const sheetProperty = spreadsheet.data.sheets.find(
             sheet => sheet.properties ? sheet.properties.sheetId === range.sheetId : false,
         );
         if (!sheetProperty || !sheetProperty.properties) {
             return;
         }
+        const finalRange = range.range ? `${sheetProperty.properties.title}!${range.range}` : sheetProperty.properties.title;
         const resp = await service.spreadsheets.values.update({
-            'range': sheetProperty.properties.title,
+            'range': finalRange,
             'spreadsheetId': range.spreadSheetId,
             'valueInputOption': 'RAW',
             'requestBody': {
