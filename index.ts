@@ -91,8 +91,8 @@ async function get() {
         }
         if (output !== undefined) {
             process.stdout.write(output);
+            process.stdout.end();
         }
-        process.stdout.end();
     });
 }
 
