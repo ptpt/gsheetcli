@@ -75,10 +75,11 @@ function getService() {
 }
 function get() {
     return __awaiter(this, void 0, void 0, function* () {
-        const stringifier = csv_stringify_1.default();
-        stringifier.on('readable', () => {
-            const row = stringifier.read();
-            process.stdout.write(row.toString());
+        process.stdout.on('close', () => {
+            process.exit(0);
+        });
+        process.stdout.on('end', () => {
+            process.exit(0);
         });
         const service = yield getService();
         const range = parseSpreadSheetURL(process.argv[3]);
@@ -100,9 +101,15 @@ function get() {
             'spreadsheetId': range.spreadSheetId,
             'range': finalRange,
         });
-        for (const row of sheetData.data.values || []) {
-            stringifier.write(row);
-        }
+        csv_stringify_1.default(sheetData.data.values || [], (err, output) => {
+            if (err) {
+                throw err;
+            }
+            if (output !== undefined) {
+                process.stdout.write(output);
+            }
+            process.stdout.end();
+        });
     });
 }
 function update() {

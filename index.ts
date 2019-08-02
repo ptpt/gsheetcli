@@ -57,11 +57,12 @@ async function getService() {
 }
 
 async function get() {
-    const stringifier = stringify();
+    process.stdout.on('close', () => {
+        process.exit(0);
+    });
 
-    stringifier.on('readable', () => {
-        const row = stringifier.read();
-        process.stdout.write(row.toString());
+    process.stdout.on('end', () => {
+        process.exit(0);
     });
 
     const service = await getService();
@@ -84,9 +85,15 @@ async function get() {
         'spreadsheetId': range.spreadSheetId,
         'range': finalRange,
     });
-    for (const row of sheetData.data.values || []) {
-        stringifier.write(row);
-    }
+    stringify(sheetData.data.values || [], (err, output) => {
+        if (err) {
+            throw err;
+        }
+        if (output !== undefined) {
+            process.stdout.write(output);
+        }
+        process.stdout.end();
+    });
 }
 
 async function update() {

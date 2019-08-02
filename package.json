@@ -15,7 +15,7 @@
   "dependencies": {
     "csv-parse": "^4.3.0",
     "csv-stringify": "^5.1.2",
-    "googleapis": "^36.0.0"
+    "googleapis": "^42.0.0"
   },
   "bin": {
     "gsheetcli": "./index.js"
