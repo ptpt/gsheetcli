@@ -1,6 +1,6 @@
 {
   "name": "gsheetcli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Simple Google Sheets command line tools",
   "main": "index.js",
   "scripts": {

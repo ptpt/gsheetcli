@@ -129,7 +129,8 @@ async function update() {
         const resp = await service.spreadsheets.values.update({
             range: finalRange,
             spreadsheetId: range.spreadSheetId,
-            valueInputOption: "RAW",
+            // valueInputOption: "RAW",
+            valueInputOption: "USER_ENTERED",
             requestBody: {
                 majorDimension: "ROWS",
                 values: rows,

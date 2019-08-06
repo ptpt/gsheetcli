@@ -141,7 +141,8 @@ function update() {
             const resp = yield service.spreadsheets.values.update({
                 range: finalRange,
                 spreadsheetId: range.spreadSheetId,
-                valueInputOption: "RAW",
+                // valueInputOption: "RAW",
+                valueInputOption: "USER_ENTERED",
                 requestBody: {
                     majorDimension: "ROWS",
                     values: rows,
